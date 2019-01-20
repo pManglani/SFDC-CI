@@ -1,0 +1,88 @@
+<project name="SFDC Build" basedir="." xmlns:sf="antlib:com.salesforce">
+	<property environment="env"/>
+	<property file="build.properties"/>
+	
+	<target name="example">
+		<echo message="this is a test target" level="info"/>
+	</target>
+	
+	<target name="pre-build">
+		<exec executable="${env.RUBY_HOME}/ruby.exe" dir="${basedir}">
+			<arg value="${basedir}\splitbuilds.rb"/>
+		</exec>
+	</target>
+	
+	<target name="pre-dynamic-build">
+		<exec executable="${env.RUBY_HOME}/ruby.exe" dir="${basedir}">
+			<arg value="${basedir}\DynamicBuild.rb"/>
+		</exec>
+	</target>
+	
+	<target name="dynamicZip">
+		<echo message="Creating zip for deploy" level="info"/>
+		<zip destFile = "deploy/build.zip" basedir="deploy/src/"/>
+	</target>
+	
+	<target name="fullZip0">
+		<echo message="Creating zip for deploy0" level="info"/>
+		<zip destFile = "deploy0/build.zip" basedir="deploy0/src/"/>
+	</target>
+	
+	<target name="fullZip1">
+		<echo message="Creating zip for deploy1" level="info"/>
+		<zip destFile = "deploy1/build.zip" basedir="deploy1/src/"/>
+	</target>
+	
+	<target name="fullZip2">
+		<echo message="Creating zip for deploy2" level="info"/>
+		<zip destFile = "deploy2/build.zip" basedir="deploy2/src/"/>
+	</target>
+
+	<target name="fullZip3">
+		<echo message="Creating zip for deploy3" level="info"/>
+		<zip destFile = "deploy3/build.zip" basedir="deploy3/src/"/>
+	</target>
+	
+	<target name="deployDynamic" depends="dynamicZip">
+		<echo message="performing dynamic deploy transaction on ${sf.username}" level="info"/>
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" zipfile="deploy/build.zip">
+		</sf:deploy>
+	</target>
+	
+	<target name="deployFull0" depends="fullZip0">
+		<echo message="deploying package 0 on ${sf.username}" level="info"/>
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" zipfile="deploy0/build.zip">
+		</sf:deploy>
+	</target>
+	
+	<target name="deployFull1" depends="fullZip1">
+		<echo message="deploying package 1 on ${sf.username}" level="info"/>
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" zipfile="deploy1/build.zip">
+		</sf:deploy>
+	</target>
+	
+	<target name="deployFull2" depends="fullZip2">
+		<echo message="deploying package 2 on ${sf.username}" level="info"/>
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" zipfile="deploy2/build.zip">
+		</sf:deploy>
+	</target>
+	
+	<target name="deployFull3" depends="fullZip3">
+		<echo message="deploying package 3 on ${sf.username}" level="info"/>
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" zipfile="deploy3/build.zip">
+		</sf:deploy>
+	</target>
+
+	<target name="fullZip">
+		<antcall target="fullZip0"/>
+		<antcall target="fullZip1"/>
+		<antcall target="fullZip2"/>
+		<antcall target="fullZip3"/>
+	</target>
+	
+	<target name="deployFull">
+		<antcall target="deployFull1"/>
+		<antcall target="deployFull2"/>
+	</target>
+	
+</project>
