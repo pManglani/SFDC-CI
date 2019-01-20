@@ -11,5 +11,9 @@ public class TestDAO {
 	public static void fetchDAOMethod3() {
         
     }
+	
+	public static void fetchDAOMethod3() {
+        
+    }
 
 }
